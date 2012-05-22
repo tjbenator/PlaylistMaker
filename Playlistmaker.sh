@@ -112,7 +112,13 @@ if [ "$RECUR" = "FALSE" ]; then
 	colorize green "Generating $PARAM"
 	generate "$PARAM"
 else
-	colorize blue "NEXT VERSION! STAY TUNED!"
+	pushd "$PARAM"
+		for folder in *; do
+		   if [ -d "$folder" ]; then
+		      generate "$folder"
+		   fi
+		done
+	colorize green "You have a bunch of Playlists in your playlist folder!"
 fi
 
 if [ "$PLAY" = "TRUE" ]; then
