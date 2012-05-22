@@ -4,8 +4,7 @@
 #Created by: Travis Beck
 ########################
 #Folder name for playlists!
-#playlists="CHANGEME"
-playlists="/home/travis/playlists"
+playlists="CHANGEME"
 
 #Audio player for -p arg. This is used to play the playlist after it is created
 #eval $PLAYER $PLAYLIST
