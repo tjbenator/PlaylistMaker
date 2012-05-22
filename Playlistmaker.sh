@@ -2,7 +2,9 @@
 ########################
 #V1.1
 #Created by: Travis Beck
+#Dependencies: getopts shopt
 ########################
+
 #Folder name for playlists! If this is changed you have to use '-p dir' when running the script.
 #playlists="" #Uncomment this line and define your playlist directory
 
