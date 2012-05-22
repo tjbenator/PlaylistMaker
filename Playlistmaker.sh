@@ -3,8 +3,8 @@
 #V1.1
 #Created by: Travis Beck
 ########################
-#Folder name for playlists!
-playlists="CHANGEME"
+#Folder name for playlists! If this is changed you have to use '-p dir' when running the script.
+#playlists="" #Uncomment this line and define your playlist directory
 
 #Audio player for -p arg. This is used to play the playlist after it is created
 #eval $PLAYER $PLAYLIST
@@ -23,9 +23,6 @@ date=`date +%Y-%m-%d`
 #End of user configuration
 #===================================================================================
 
-if [ "$playlists" = "CHANGEME" ]; then
-	echo "Please configure!"; exit 0
-fi 
 
 #Make everything fancy
 colorize()
@@ -91,16 +88,23 @@ generate()
 #MANAGE COMMANDLINE ARGS
 RECUR="FALSE"
 PLAY="FALSE"
-while getopts rp OPTION
+while getopts rpd: OPTION
 do
          case $OPTION in
           r) RECUR="TRUE" ;;
-	  p) PLAY="TRUE"
+	  p) PLAY="TRUE" ;;
+          d) playlists="$OPTARG"
          esac
 done
 shift $(( OPTIND - 1 ))  # shift past the last flag or argument
 
 PARAM=$*
+
+
+if [ -z "$playlists" ] || [ "$playlists" -ne "" ]; then
+	colorize red "Playlist directory Invalid"
+	colorize red "Please configure your playlist directory by editing the 'playlists' variable in this script or use '-d playlist'"; exit 0
+fi 
 
 ###########################################################################
 #MAIN
