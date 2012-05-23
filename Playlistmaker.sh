@@ -1,8 +1,8 @@
 #!/bin/bash
 ########################
-#V1.1
+#V1.2
 #Created by: Travis Beck
-#Dependencies: getopts shopt
+#Dependencies: getopts shopt bc
 ########################
 
 #Folder name for playlists! If this is changed you have to use '-p dir' when running the script.
@@ -24,7 +24,7 @@ date=`date +%Y-%m-%d`
 #===================================================================================
 #End of user configuration
 #===================================================================================
-
+START=`date +%s.%N`
 
 #Make everything fancy
 colorize()
@@ -82,9 +82,8 @@ generate()
 	popd >> /dev/null
 	#Make case sesitive
 	shopt -u nocaseglob
-
-	#Done
 	colorize green "\"$playlist\" has been created!"
+	echo 
 }
 
 #MANAGE COMMANDLINE ARGS
@@ -103,7 +102,7 @@ shift $(( OPTIND - 1 ))  # shift past the last flag or argument
 PARAM=$*
 
 
-if [ -z "$playlists" ] || [ "$playlists" -ne "" ]; then
+if [ -z "$playlists" ]; then
 	colorize red "Playlist directory Invalid"
 	colorize red "Please configure your playlist directory by editing the 'playlists' variable in this script or use '-d playlist'"; exit 0
 fi 
@@ -117,14 +116,16 @@ if [ "$RECUR" = "FALSE" ]; then
 	#Default Mode
 	colorize green "Generating $PARAM"
 	generate "$PARAM"
+	COUNT=1
 else
 	pushd "$PARAM"
+		COUNT=0
 		for folder in *; do
 		   if [ -d "$folder" ]; then
 		      generate "$folder"
+		      COUNT=$[COUNT+1]
 		   fi
 		done
-	colorize green "You have a bunch of Playlists in your playlist folder!"
 fi
 
 if [ "$PLAY" = "TRUE" ]; then
@@ -133,6 +134,9 @@ if [ "$PLAY" = "TRUE" ]; then
 	eval nohup $PLAYER "'$playlist'" 2>/dev/null 1>/dev/null &
 fi
 
+END=`date +%s.%N`
+
+colorize green "$COUNT playlists were created in $(echo "$END - $START" | bc ) seconds and stored in $playlists"
 echo 
 colorize yellow "BYE! ENJOY YOUR PLAYLIST! YOU LAZY BASTARD :D"
 echo 
